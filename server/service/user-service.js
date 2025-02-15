@@ -24,7 +24,10 @@ class UserService {
             activationLink
         });
 
-        await MailService.sendActivationMail(email, activationLink);
+        await MailService.sendActivationMail(
+            email, 
+            `${process.env.API_URL}/api/activator/${activationLink}`
+        );
 
         const userDto = new UserDto(user);
         const tokens = TokenService.generateTokens({
