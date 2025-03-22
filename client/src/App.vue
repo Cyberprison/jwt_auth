@@ -1,3 +1,5 @@
+//доделать проброс ошибок из промиса вверх по стеку
+
 <template>
     <div>
         <div v-if="isLoading==true">
@@ -6,8 +8,8 @@
 
         <div v-else-if="!isAuth">
             <LoginForm
-                v-on:login="login"
-                v-on:registration="registration"
+                v-bind:login="login"
+                v-bind:registration="registration"
             ></LoginForm>
             <button 
                 v-on:click="getUsers"
@@ -58,6 +60,8 @@
 <script>
     import LoginForm from "./components/LoginForm.vue";
     import { API_URL } from "./constants/constants.js";
+    import AuthService from "./services/AuthService.js";
+    import UserService from "./services/UserService.js";
 
     export default {
         name: 'App',
@@ -66,7 +70,9 @@
                 user: {},
                 users: [],
                 isAuth: false,
-                isLoading: false
+                isLoading: false,
+                email: "",
+                password: "",
             }
         },
         components: {
@@ -89,37 +95,44 @@
             },
             async login(email, password) {
                 try {
-                    const response = await AuthService.login(email, password);
-                    console.log(response)
-                    localStorage.setItem('token', response.data.accessToken);
-                    setAuth(true);
-                    setUser(response.data.user);
+                    const request = AuthService.login(email, password)
+                        .catch((error) => {return new Error(error)});
+                    const response = await request;
+                    console.log(response);
+                    localStorage.setItem('token', response.accessToken);
+                    this.setAuth(true);
+                    this.setUser(response.user);
                 } 
                 catch (e) {
-                    console.log(e.response.data.message);
+                    console.log(e.response.message);
                 }
             },
             async registration(email, password) {
                 try {
-                    const response = await AuthService.registration(email, password);
-                    console.log(response)
-                    localStorage.setItem('token', response.data.accessToken);
-                    setAuth(true);
-                    setUser(response.data.user);
+                    const request = AuthService.registration(email, password)
+                        .catch((error) => {return new Error(error)});
+                    const response = await request;
+                    console.log(response);
+                    localStorage.setItem("token", response.accessToken);
+                    this.setAuth(true);
+                    this.setUser(response.user);
                 } 
                 catch (e) {
-                    console.log(e.response.data.message);
+                    console.log(e.response.message);
                 }
             },
             async logout() {
                 try {
-                    const response = await AuthService.logout();
-                    localStorage.removeItem('token');
-                    setAuth(false);
-                    setUser({});
+                    const request = AuthService.logout()
+                        .catch((error) => {return new Error(error)});
+                    const response = await request;
+                    console.log(response);
+                    localStorage.removeItem("token");
+                    this.setAuth(false);
+                    this.setUser({});
                 } 
                 catch (e) {
-                    console.log(e.response.data.message);
+                    console.log(e.response.message);
                 }
             },
             async checkAuth() {
@@ -129,22 +142,28 @@
                         const xhr = new XMLHttpRequest();
                         xhr.withCredentials = true;
                         xhr.onload = () => {
-                            succeed(xhr.response);
+                            const response = JSON.parse(xhr.responseText);
+                            if (xhr.status == 200) { 
+                                succeed(response);
+                            }
+                            else {
+                                fail(response);
+                            }
                         };
                         xhr.open("GET", `${API_URL}/refresh`);
-                        xhr.responseType = "json";
                         xhr.setRequestHeader("Accept", "application/json");
                         xhr.send();
                     });
 
                     const response = await request;
                     console.log(response);
+
                     localStorage.setItem("token", response.accessToken);
                     this.setAuth(true);
                     this.setUser(response.user);
                 } 
                 catch (e) {
-                    console.log(e.response.data.message);
+                    console.log(e.response.message);
                 } 
                 finally {
                     this.setLoading(false);
@@ -152,8 +171,12 @@
             },
             async getUsers() {
                 try {
-                    const response = await UserService.fetchUsers();
-                    setUsers(response.data);
+                    const request = UserService.fetchUsers()
+                        .catch((error) => {return new Error(error)});
+                    const response = await request;
+                    console.log(response);
+                    this.users = response;
+                    console.log(this.users);
                 } 
                 catch (e) {
                     console.log(e);

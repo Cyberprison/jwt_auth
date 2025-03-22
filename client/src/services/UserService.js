@@ -1,17 +1,24 @@
+import { API_URL } from "../constants/constants.js";
+
 export default class UserService {
     static fetchUsers() {
-        const xhr = new XMLHttpRequest();
-        xhr.onload = () => {
-            if (xhr.status == 200) {
-                const json = xhr.response;
-                console.log(json);
-                return json;
-            }
-        };
-        xhr.open("GET", "/users");
-        xhr.responseType = "json";
-        xhr.setRequestHeader("Accept", "application/json");
-        xhr.send();
+        return new Promise((succeed, fail) => {
+            const xhr = new XMLHttpRequest();
+            xhr.withCredentials = true;
+            xhr.onload = () => {
+                if (xhr.status == 200) {
+                    if (xhr.status == 200) { 
+                        succeed(response);
+                    }
+                    else {
+                        fail(response);
+                    }
+                }
+            };
+            xhr.open("GET", API_URL + "/users", true);
+            xhr.setRequestHeader("Accept", "application/json");
+            xhr.send();
+        });
     }
 }
 

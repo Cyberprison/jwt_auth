@@ -2,43 +2,63 @@
 //просто работаю с экземпляром XMLHttpRequest
 //может быть если был бы это пет проектом, то выделил в отдельный метод в http/index
 
-import API_URL from "../constants/constants.js";
+import { API_URL } from "../constants/constants.js";
 
 export default class AuthService {
     static async login(email, password) {
-        const data = JSON.stringify({email, password});
-        const xhr = new XMLHttpRequest();
-        xhr.withCredentials(true);
-        xhr.onload = () => {
-            const response = JSON.parse(xhr.responseText);
-            return response;
-        };
-        xhr.open("POST", API_URL + "/login");
-        xhr.setRequestHeader("Content-Type", "application/json");
-        xhr.send(data);
+        return new Promise((succeed, fail) => {
+            const data = JSON.stringify({email, password});
+            const xhr = new XMLHttpRequest();
+            xhr.onload = () => {
+                const response = JSON.parse(xhr.responseText);
+                if (xhr.status == 200) { 
+                    succeed(response);
+                }
+                else {
+                    fail(response);
+                }
+            };
+            xhr.open("POST", API_URL + "/login", true);
+            xhr.setRequestHeader("Content-Type", "application/json");
+            xhr.send(data);
+        });
     }
 
     static async registration(email, password) {
-        const data = JSON.stringify({email, password});
-        const xhr = new XMLHttpRequest();
-        xhr.onload = () => {
-            const response = JSON.parse(xhr.responseText);
-            return response;
-        };
-        xhr.open("POST", API_URL + "/registration");
-        xhr.setRequestHeader("Content-Type", "application/json");
-        xhr.send(data);
+        return new Promise((succeed, fail) => {
+            const data = JSON.stringify({email, password});
+            const xhr = new XMLHttpRequest();
+            xhr.onload = () => {
+                const response = JSON.parse(xhr.responseText);
+                if (xhr.status == 200) { 
+                    succeed(response);
+                }
+                else {
+                    fail(response);
+                }
+            };
+            xhr.open("POST", API_URL + "/registration", true);
+            xhr.setRequestHeader("Content-Type", "application/json");
+            xhr.send(data);
+        })
     }
 
     static async logout() {
-        const xhr = new XMLHttpRequest();
-        xhr.onload = () => {
-            const response = JSON.parse(xhr.responseText);
-            return response;
-        };
-        xhr.open("POST", API_URL + "/logout");
-        xhr.setRequestHeader("Content-Type", "application/json");
-        xhr.send(data);
+        return new Promise((succeed, fail) => {
+            const xhr = new XMLHttpRequest();
+            xhr.onload = () => {
+                const response = JSON.parse(xhr.responseText);
+                if (xhr.status == 200) { 
+                    succeed(response);
+                }
+                else {
+                    fail(response);
+                }
+            };
+            xhr.open("POST", API_URL + "/logout", true);
+            xhr.setRequestHeader("Content-Type", "application/json");
+            xhr.send(data);
+        });
     }
 }
 
