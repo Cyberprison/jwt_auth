@@ -1,13 +1,14 @@
 const nodemailer = require("nodemailer");
 
+//апи у гугла поменялось, ленб разбираться в той технологии, которую использовать не буду
+
 class MailService {
+    /*
     constructor(){
         this.transporter = nodemailer.createTransport({
-            /*
             host: process.env.SMTP_HOST,
             port: process.env.SMTP_PORT,
             secure: false, 
-            */
             service: "gmail",
             auth: {
                 user: process.env.SMTP_USER,
@@ -15,8 +16,9 @@ class MailService {
             }
         });
     }
-
+    */
     async sendActivationMail(to, link){
+        /*
         await this.transporter.sendMail({
             from: process.env.SMTP_USER,
             to,
@@ -30,6 +32,7 @@ class MailService {
                     </div>
                 `
         });
+        */
     }
 
 }

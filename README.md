@@ -39,3 +39,6 @@ API_URL="http://localhost:5000"
 
 влючить IMAP \
 включить POP
+
+git rm --cached .env \
+".env" >> .gitignore

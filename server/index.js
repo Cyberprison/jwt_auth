@@ -6,6 +6,7 @@ const mongoose = require("mongoose");
 const router = require("./router/index");
 const swaggerUi = require('swagger-ui-express');
 const swaggerDocument = require('./swagger-output.json');
+const errorMiddleware = require("./middlewares/error-middleware.js");
 
 const app = express();
 
@@ -24,6 +25,8 @@ app.use("/api", router
 );
 
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
+
+app.use(errorMiddleware);
 
 const start = async () => {
     try{
