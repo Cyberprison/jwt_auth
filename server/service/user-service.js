@@ -1,7 +1,7 @@
 const UserModel = require("../models/user-model");
 const bcrypt = require("bcrypt");
 const uuid = require("uuid");
-const MailService = require("./mail-service");
+const mailService = require("./mail-service");
 const tokenService = require("./token-service");
 const UserDto = require("../dtos/user-dto");
 const ApiError = require("../exceptions/api-error.js");
@@ -26,7 +26,7 @@ class UserService {
         }); 
 
         //закомментил все, все апи гугл изменились, а изучать времени нет
-        await MailService.sendActivationMail(
+        await mailService.sendActivationMail(
             email, 
             activationLink //`${process.env.API_URL}/api/activator/${activationLink}`
         );
@@ -65,6 +65,11 @@ class UserService {
         const tokens = tokenService.generateTokens({...userDto});
         await tokenService.saveToken(userDto.id, tokens.refreshToken);
         return {...tokens, user: userDto};
+    }
+
+    async logout(refreshToken) {
+        const token = await tokenService.removeToken(refreshToken); 
+        return token;
     }
 }
 
