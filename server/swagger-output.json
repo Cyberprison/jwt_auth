@@ -18,7 +18,7 @@
     "apiKeyAuth": {
       "type": "apiKey",
       "in": "header",
-      "name": "X-API-KEY",
+      "name": "authorization",
       "description": "Some description..."
     }
   },
@@ -144,8 +144,8 @@
         ],
         "description": "",
         "responses": {
-          "default": {
-            "description": ""
+          "200": {
+            "description": "OK"
           }
         },
         "security": [
@@ -161,6 +161,13 @@
           "UserController"
         ],
         "description": "",
+        "parameters": [
+          {
+            "name": "authorization",
+            "in": "header",
+            "type": "string"
+          }
+        ],
         "responses": {
           "200": {
             "description": "OK"

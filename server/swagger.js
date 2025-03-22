@@ -23,7 +23,7 @@ const doc = {
     apiKeyAuth: {
         type: 'apiKey',
         in: 'header', // can be 'header', 'query' or 'cookie'
-        name: 'X-API-KEY', // name of the header, query parameter or cookie
+        name: 'authorization', // name of the header, query parameter or cookie
         description: 'Some description...'
     }
   },  
